@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>Told In Pages</title>
+    </head>
+    <body>
+        <div>
+            <table>
+                <thead>
+                    <th>Name</th>
+                    <th>Pages</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+                    {% for chapter in booklet.all_chapters %}
+                    <tr>
+                        <td>{{chapter.name}}</td>
+                        <td>
+                            <a href="{% url 'all-pages' booklet_id=booklet.id chapter_id=chapter.id %}">
+                                {{chapter.page_count}}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'show-create-page' booklet_id=chapter.booklet.id chapter_id=chapter.id %}">Add Page</a>
+                            <a href="{% url 'show-edit-chapter' chapter_id=chapter.id %}">Edit</a>
+                            <a href="{% url 'delete-chapter' chapter_id=chapter.id %}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

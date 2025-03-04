@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>Told In Pages</title>
+    </head>
+    <body>
+        <div>
+            <form action="{% url 'edit-chapter' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" name="chapter_id" value="{{chapter.id}}">
+                <input type="text" name="name" value="{{chapter.name}}">
+                <button>Update Chapter</button>
+            </form>
+        </div>
+    </body>
+</html>

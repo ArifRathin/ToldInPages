@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row p-2">
+  <div class="col-lg-2 chapter-index h-100 text-center bg-success-subtle mt-2 rounded-2">
+    
+  </div>
+  <div class="col-lg-7 mt-2">
+    {% for message in messages %}
+        {% if message.extra_tags == 'edit-category-unique' %}
+            <div class="alert alert-info">
+                <span>{{message}}</span>
+            </div>
+        {% elif message.extra_tags == 'edit-category-error' %}
+            <div class="alert alert-danger">
+                <span>{{message}}</span>
+            </div>
+        {% endif %}
+    {% endfor %}
+      <form class="form-group" action="{% url 'edit-category' %}" method="POST">
+          {% csrf_token %}
+          <label class="fw-bold mt-2" for="">Name</label>
+          <input type="hidden" value="{{category.id}}" name="category_id">
+          <input class="form-control" name="name" placeholder="Category name" value="{{category.name}}">
+          <button id="btn-id" class="btn btn-success mt-2 form-control" type="submit" onclick="disablerFunc('Updating category...')">Update Category</button>
+          <label id="label-id" class="alert alert-info form-control text-center py-1 d-none" for=""></label>
+      </form>
+  </div>
+  <div class="col-lg-3 mt-2 text-center border border-dark rounded-2 vh-25 py-1" style="overflow-y: scroll;">
+    <h5 class="text-muted">You may like</h5>
+    <hr>
+    {% for suggestion in suggestions %}
+        <div class="row p-0" style="height:100px;" >
+            <div class="col-lg-5 col-5">
+                <img class="img img-fluid" style="height:100px;width:100px;" src="/media/{{ suggestion.cover_photo }}" >
+            </div>
+            <div class="col-lg-7 col-7 text-start">
+                <p class="mb-0">
+                    <a class="h6 text-dark text-decoration-none" href="{% url 'show-book-cover' suggestion.id %}">
+                        {% if suggestion.title|length > 20 %}
+                            {{suggestion.title|slice:":17"}}...
+                        {% else %}
+                            {{suggestion.title}}
+                        {% endif %}
+                    </a>
+                </p>
+                <p class="mt-0"><small><a class="text-muted fs-6 text-decoration-none" href="">{{suggestion.user.first_name}} {{suggestion.user.last_name}}</a></small></p>
+                <p class="mt-0"><small class="fst-italic fs-6">{{suggestion.read}} Read(s)</small></p>
+            </div>
+        </div>
+        {% if not forloop.last %}
+            <hr class="my-1">
+        {% endif %}
+    {% endfor %}
+</div>
+</div>
+{% endblock %}
+{% block scripts %}
+  <script type="text/javascript">
+    function disablerFunc(msg){
+      $('#btn-id').addClass('d-none')
+      $('#label-id').removeClass('d-none')
+      $('#label-id').html(msg)
+    }
+  </script>
+{% endblock %}

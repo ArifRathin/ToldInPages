@@ -1,0 +1,27 @@
+<html>
+    {% load socialaccount %}
+    <head>
+        <title>Told in pages</title>
+    </head>
+    <body>
+        <div>
+            <form action="{% url 'sign-up' %}" method="POST">
+                {% csrf_token %}
+                <label for="">First Name</label>
+                <input type="text" name="first_name">
+                <label for="">Last Name</label>
+                <input type="text" name="last_name">
+                <label for="">Email</label>
+                <input type="text" name="email">
+                <label for="">Password</label>
+                <input type="password" name="password">
+                <label for="">Re-type Password</label>
+                <input type="text" name="retype_password">
+                <button type="submit">Sign Up</button>
+            </form>
+            <h1>or</h1>
+            <a href="{% provider_login_url 'google' %}">Sign up with Google</a>
+            <a href="{% url 'log-in' %}">Log In</a>
+        </div>
+    </body>
+</html>

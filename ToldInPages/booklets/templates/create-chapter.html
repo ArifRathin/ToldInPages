@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <title>Told In Pages</title>
+    </head>
+    <body>
+        <div>
+            <form action="{% url 'create-chapter' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" value="{{ booklet_id }}" name="booklet_id">
+                <label for="">Name</label>
+                <input type="text" name="name">
+                <button>Add Chapter</button>
+            </form>
+        </div>
+    </body>
+</html>

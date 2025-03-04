@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>Told In Pages</title>
+    </head>
+    <body>
+        <div>
+            <table>
+                <thead>
+                    <th>#</th>
+                    <th>Booklet</th>
+                    <th>Chapter</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+                    {% for page in all_pages %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{page.booklet.title}}</td>
+                            <td>
+                                {% if page.chapter is not None %}
+                                    {{page.chapter.name}}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td><a href="{% url 'show-edit-page' page_id=page.id %}">Edit</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

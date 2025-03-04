@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load social_share %}
+{% block title %}
+    <title>{{booklet.title}}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+{% block content %}
+<div class="row p-2">
+    <div class="col-lg-2 chapter-index h-100 bg-success-subtle mt-2 rounded-2">
+      <div class="text-center">
+        <h5 class="taxt-dark">Chapters</h5>
+      </div>
+      <div class="text-start">
+        <ul class="list-unstyled">
+            {% for chapter in booklet.all_chapters %}
+                <li>{{forloop.counter}}. {% if chapter.page_count > 0 %}<a class="text-dark" href="{% url 'go-to-chapter' booklet_id=booklet.id chapter_no=forloop.counter %}">{{chapter.name}}</a>
+                {% else %} <span>{{chapter.name}}</span> {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="row">
+          <div class="col-lg-6">
+            {% if request.user.is_authenticated %}
+              {% if booklet.user.id == request.user.id %}
+              <label id="label-id" class="btn btn-danger text-white d-none"></label>
+              <a id="btn-id" class="btn btn-danger me-auto" href="{% url 'publish-booklet' booklet.id %}" onclick="publishDisablerFunc('Updating...')">
+                {% if booklet.if_published %}
+                  Unpublish
+                {% else %}
+                  Publish
+                {% endif %}
+              </a> 
+              {% endif %}
+            {% endif %}
+          </div>
+          <div class="col-lg-6 text-end mt-1">
+            {% if request.user.id == booklet.user.id %}
+              <a class="btn btn-sm fw-bold btn-info ms-auto me-1" href="{% url 'show-edit-booklet' booklet_id=booklet.id %}">Edit</a>
+              <a class="btn btn-sm fw-bold btn-info ms-auto me-1 {% if booklet.chapter_count >= 10 %}disabled{% endif %}" href="{% url 'show-create-chapter' booklet_id=booklet.id %}">Add Chapter</a>
+            {% endif %}
+            {% if request.user.is_authenticated %}
+              <a class="btn btn-sm fw-bold btn-info ms-auto" href="{% url 'create-booklet' %}">Create a Booklet</a>
+            {% else %}
+            <a class="btn btn-info fw-bold text-dark fw-bold text-decoration-none" data-bs-toggle="modal" data-bs-target="#log-in-modal-id" href="javascript:void(0)" onclick="$('#next-page-id').val('{% url 'create-booklet' %}')">Create A Booklet</a>
+            {% endif %}
+          </div>
+    </div>
+        <div class="row p-2">
+            <div class="col-lg-12 text-center border border-dark rounded-2 p-2">
+                <figure>
+                    <blockquote class="blockquote">
+                      <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title"><span class="h2">{{booklet.title}}</span><small id="avg-rating-id" class="fs-6">{% if avg_rating %}({{avg_rating}}/5){% else %}<small class="fst-italic"> (Not rated yet)</small>{% endif %}</small></p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                      <cite class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title"><a class="text-decoration-none text-muted" href="{% url 'profile' booklet.user.id %}">{{ booklet.user.first_name }} {{ booklet.user.last_name }}</a></cite>
+                    </figcaption>
+                  </figure>
+                  <small>{% if not booklet.if_published %}<span class="fst-italic">Currently Unpublished</span>{% else %}Published at {{booklet.publishing_time}}{% endif %} |</small>
+                  <small>Read {{booklet.read}} times</small>
+                  <div>
+                    <!-- <button class="btn btn-sm btn-warning">Rating</button> -->
+                    <span id="my-rating-span-id">
+                      {% for r in rating_max %}
+                        {% if request.user.is_authenticated %}
+                          <a class="text-decoration-none" href="javascript:void(0)" onclick="rate({{r}})"><i id="rating-id-{{r}}" class="fa fa-star {% if r <= my_rating %}text-warning{% else %}text-dark{% endif %}"></i></a>
+                        {% else %}                          
+                          <a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#log-in-modal-id" href="javascript:void(0)" onclick="$('#next-page-id').val('{{request.build_absolute_uri}}')"><i id="rating-id-{{r}}" class="fa fa-star text-dark"></i></a>
+                        {% endif %}
+                      {% endfor %}
+                    </span>
+                    <span id="waiting-for-rating-update-id" class="fst-italic d-none">
+                      Updating...
+                    </span>
+                    <a class="btn btn-sm btn-success {% if booklet.page_count == 0 %}disabled{% endif %}" href="{% url 'load-page-in-reader' booklet_id=booklet.id page_no=1 %}">Read</a>
+                    <a class="btn btn-sm btn-outline-dark text-decoration-none fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Share
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li class="text-center">{% post_to_facebook object_or_url "<i class='text-dark fa fa-facebook'></i>" %}</li>
+                    </ul>
+                  </div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <select id="chapter-selector-id" class="form-control text-center" name="" id="" onchange="goToChapter()">
+                  <option value="" disabled selected>---Select Chapter---</option>
+                  {% for chapter in booklet.all_chapters %}
+                    <option class="text-dark" {% if chapter.page_count < 1 %}disabled{% endif %} value="{% url 'go-to-chapter' booklet_id=booklet.id chapter_no=forloop.counter %}">{{chapter.name}}</option>
+                  {% endfor %}
+                </select>
+            </div>
+            <div class="text-center"><img class="img img-fluid rounded-2 mb-2" src="/media/{{booklet.cover_photo}}"></div>
+    </div>
+    <div class="col-lg-3 mt-2 border border-dark rounded-2">
+      <div class="text-center">
+        <h3>Book Information</h3>
+      </div>
+      <hr>
+      <p>Tag line: <span class="fw-bold text-info">{{booklet.tag_line}}</span></p>
+      <p>Category: <span class="fw-bold text-info">{{booklet.category.name}}</span></p>
+      {% if booklet.chapter_count == 0 %}
+        <p><span class="fw-bold">{{booklet.chapter_count}}</span>Chapter(s)</p>
+      {% else %}
+        <a class="text-dark" href="{% url 'all-chapters' booklet.id %}"><p><span class="fw-bold">{{booklet.chapter_count}}</span>Chapter(s)</p></a>
+      {% endif %}
+      {% if booklet.page_count == 0 %}
+        <p><span class="fw-bold">{{booklet.page_count}}</span>Page(s)</p>
+      {% else %}
+        <a class="text-dark" href="{% url 'all-pages' booklet.id 0 %}"><p><span class="fw-bold">{{booklet.page_count}}</span>Page(s)</p></a>
+      {% endif %}
+      <p>Rated by <span class="fw-bold">{{booklet.rated_by_readers_count}}</span> user(s)</p>
+      <p>Created at <span class="fw-bold">{{booklet.created_at}}</span></p>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+  function rate(value){
+    $('#waiting-for-rating-update-id').removeClass('d-none')
+    $('#my-rating-span-id').addClass('d-none')
+    $.ajax({
+      type:'GET',
+      url: "{% url 'rate-booklet' %}",
+      data: {"booklet_id":'{{ booklet.id }}', "rating":value},
+      success:function(response){
+        console.log(response)
+        $('#my-rating-span-id').removeClass('d-none')
+        $('#waiting-for-rating-update-id').addClass('d-none')
+        if(response[1]>0){
+          $('#avg-rating-id').html("("+response[1]+"/5)")
+        }
+        for(let i=1; i<=5; i++){
+          $('#rating-id-'+i).removeClass('text-warning')
+          $('#rating-id-'+i).removeClass('text-dark')
+        }
+        for(let i=1; i<=5; i++){
+          if(i<=response[0]){
+            $('#rating-id-'+i).addClass('text-warning')
+          }
+          else{
+            $('#rating-id-'+i).addClass('text-dark')
+          }
+        }
+      }
+    });
+  }
+    function goToChapter(){
+        url = $('#chapter-selector-id').find(':selected').val()
+        location.href = url
+    }
+    function publishDisablerFunc(msg){
+      $('#btn-id').addClass('d-none')
+      $('#label-id').removeClass('d-none')
+      $('#label-id').html(msg)
+    }
+</script>
+{% endblock %}
+{% block modals %}
+{% include 'modals/login.html' %}
+{% include 'modals/sign-up.html' %}      
+{% endblock %}

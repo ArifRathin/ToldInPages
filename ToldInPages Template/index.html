@@ -1,0 +1,439 @@
+<html>
+  <head>
+    <title>Told In Pages</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div class="container-fluid">
+        <!-- Navigation Bar Starts -->
+        <div class="row bg-success-subtle pt-1 pb-1">
+          <div class="col-lg-1 col-md-1 col-sm-1 col-1 pt-1">
+            <span class="fw-bolder mt-1">TiP</span>
+          </div>
+          <div class="col-lg-7 col-md-7 col-sm-7 col-7 pe-0">
+            <input class="form-control" type="text" placeholder="Search">
+            <div class="rounded-2 d-none" style="z-index: 5;height:auto; width:inherit;position:absolute;background-color: white;">
+              <ul class="p-2 list-unstyled bg-secondary-subtle">
+                <li>
+                  Travel
+                </li>
+                <hr>
+                <li>
+                  Reviews
+                </li>
+                <hr>
+                <li class="text-center">
+                  <a class="text-dark" href="">More Results</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+            <div class="row text-center mt-1">
+                <div class="col-6">
+                  <a class="text-dark fw-bold text-decoration-none navbar-custom-links" data-bs-toggle="modal" data-bs-target="#log-in-modal-id" href="javascript:void(0)">Log In</a>
+                </div>
+                <div class="col-6">
+                  <a class="text-dark fw-bold text-decoration-none navbar-custom-links" data-bs-toggle="modal" data-bs-target="#sign-up-modal-id" href="javascript:void(0)">Sign Up</a>
+                </div>
+            </div>
+          </div>
+          <!-- <div class="col-lg-4 col-md-4 col-sm-4 col-4 text-end">
+            <div class="dropdown mt-1">
+              <a class="text-decoration-none text-dark fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Anonymous
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><a class="dropdown-item" href="#">Log out</a></li>
+              </ul>
+            </div>
+          </div> -->
+          
+        </div>
+        <!-- Navigation Bar Ends -->
+        <!-- Create Booklet Banner Starts -->
+        <div class="row bg-success mt-2">
+          <div class="col-lg-12 text-center mt-2 mb-2">
+            <h3 class="text-white">Write about anything and publish as booklets!</h3>
+            <button class="btn btn-info fw-bold">Create A Booklet</button>
+          </div>
+        </div>
+        <!-- Create Booklet Banner Ends -->
+        <div class="row">
+            <div class="col-lg-12 text-center mt-3">
+              <h3 class="fw-bolder">Travel Booklets</h3>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+              <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+                <span class="read">100,000 Reads</span>
+                <img src="sunset.jpg" class="card-img-top" alt="...">
+                <div class="card-body p-0 ps-1">
+                  <figure>
+                    <blockquote class="blockquote">
+                      <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Saint Martin's Tour 2022</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                      <cite class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">John Doe</cite>
+                    </figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+              <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+                <span class="read">100 Reads</span>
+                <img src="buriganga.jpg" class="card-img-top" alt="...">
+                <div class="card-body p-0 ps-1">
+                  <figure>
+                    <blockquote class="blockquote">
+                      <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Buringanga River</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                      <cite class="thumbnail-xs-booklet-author thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">Anonymous Writer</cite>
+                    </figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+              <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+                <span class="read">0 Reads</span>
+                <img src="padma_bridge.jpg" class="card-img-top" alt="...">
+                <div class="card-body p-0 ps-1">
+                  <figure>
+                    <blockquote class="blockquote">
+                      <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Padma Bridge Tour 2022</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                      <cite title="Source Title" class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author">Anonymous User</cite>
+                    </figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+              <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+                <span class="read">1M Reads</span>
+                <img src="ahsan_manzil.jpg" class="card-img-top" alt="...">
+                <div class="card-body p-0 ps-1">
+                  <figure>
+                    <blockquote class="blockquote">
+                      <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Ahsan Manzil Tour 2022</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                      <cite title="Source Title thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author">Bangladeshi Traveler</cite>
+                    </figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 text-center">
+              <small><a class="text-dark fw-bolder" href="javascript:void(0)">Show All Travel Booklets</a></small>
+            </div>
+        </div>
+        <div class="row p-2">
+          <hr>
+        </div>
+        <div class="row">
+          <div class="col-lg-12 text-center mt-3">
+            <h3 class="fw-bolder">Review Booklets</h3>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+            <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+              <span class="read">100,000 Reads</span>
+              <img src="sunset.jpg" class="card-img-top" alt="...">
+              <div class="card-body p-0 ps-1">
+                <figure>
+                  <blockquote class="blockquote">
+                    <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Saint Martin's Tour 2022</p>
+                  </blockquote>
+                  <figcaption class="blockquote-footer">
+                    <cite class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">John Doe</cite>
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+            <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+              <span class="read">100 Reads</span>
+              <img src="buriganga.jpg" class="card-img-top" alt="...">
+              <div class="card-body p-0 ps-1">
+                <figure>
+                  <blockquote class="blockquote">
+                    <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Buringanga River</p>
+                  </blockquote>
+                  <figcaption class="blockquote-footer">
+                    <cite class="thumbnail-xs-booklet-author thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">Anonymous Writer</cite>
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+            <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+              <span class="read">0 Reads</span>
+              <img src="padma_bridge.jpg" class="card-img-top" alt="...">
+              <div class="card-body p-0 ps-1">
+                <figure>
+                  <blockquote class="blockquote">
+                    <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Padma Bridge Tour 2022</p>
+                  </blockquote>
+                  <figcaption class="blockquote-footer">
+                    <cite title="Source Title" class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author">Anonymous User</cite>
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+            <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+              <span class="read">1M Reads</span>
+              <img src="ahsan_manzil.jpg" class="card-img-top" alt="...">
+              <div class="card-body p-0 ps-1">
+                <figure>
+                  <blockquote class="blockquote">
+                    <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Ahsan Manzil Tour 2022</p>
+                  </blockquote>
+                  <figcaption class="blockquote-footer">
+                    <cite title="Source Title thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author">Bangladeshi Traveler</cite>
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 text-center">
+            <small><a class="text-dark fw-bolder" href="javascript:void(0)">Show All Review Booklets</a></small>
+          </div>
+      </div>
+      <div class="row p-2">
+        <hr>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 text-center mt-3">
+          <h3 class="fw-bolder">Horror Booklets</h3>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+          <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+            <span class="read">100,000 Reads</span>
+            <img src="sunset.jpg" class="card-img-top" alt="...">
+            <div class="card-body p-0 ps-1">
+              <figure>
+                <blockquote class="blockquote">
+                  <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Saint Martin's Tour 2022</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                  <cite class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">John Doe</cite>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+          <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+            <span class="read">100 Reads</span>
+            <img src="buriganga.jpg" class="card-img-top" alt="...">
+            <div class="card-body p-0 ps-1">
+              <figure>
+                <blockquote class="blockquote">
+                  <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Buringanga River</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                  <cite class="thumbnail-xs-booklet-author thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">Anonymous Writer</cite>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+          <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+            <span class="read">0 Reads</span>
+            <img src="padma_bridge.jpg" class="card-img-top" alt="...">
+            <div class="card-body p-0 ps-1">
+              <figure>
+                <blockquote class="blockquote">
+                  <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Padma Bridge Tour 2022</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                  <cite title="Source Title" class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author">Anonymous User</cite>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+          <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+            <span class="read">1M Reads</span>
+            <img src="ahsan_manzil.jpg" class="card-img-top" alt="...">
+            <div class="card-body p-0 ps-1">
+              <figure>
+                <blockquote class="blockquote">
+                  <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Ahsan Manzil Tour 2022</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                  <cite title="Source Title thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author">Bangladeshi Traveler</cite>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12 text-center">
+          <small><a class="text-dark fw-bolder" href="javascript:void(0)">Show All Horror Booklets</a></small>
+        </div>
+    </div>
+    <div class="row p-2">
+      <hr>
+    </div>
+    <div class="row">
+      <div class="col-lg-12 text-center mt-3">
+        <h3 class="fw-bolder">Tutorial Booklets</h3>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+        <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+          <span class="read">100,000 Reads</span>
+          <img src="sunset.jpg" class="card-img-top" alt="...">
+          <div class="card-body p-0 ps-1">
+            <figure>
+              <blockquote class="blockquote">
+                <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Saint Martin's Tour 2022</p>
+              </blockquote>
+              <figcaption class="blockquote-footer">
+                <cite class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">John Doe</cite>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+        <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+          <span class="read">100 Reads</span>
+          <img src="buriganga.jpg" class="card-img-top" alt="...">
+          <div class="card-body p-0 ps-1">
+            <figure>
+              <blockquote class="blockquote">
+                <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Buringanga River</p>
+              </blockquote>
+              <figcaption class="blockquote-footer">
+                <cite class="thumbnail-xs-booklet-author thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">Anonymous Writer</cite>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+        <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+          <span class="read">0 Reads</span>
+          <img src="padma_bridge.jpg" class="card-img-top" alt="...">
+          <div class="card-body p-0 ps-1">
+            <figure>
+              <blockquote class="blockquote">
+                <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Padma Bridge Tour 2022</p>
+              </blockquote>
+              <figcaption class="blockquote-footer">
+                <cite title="Source Title" class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author">Anonymous User</cite>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+        <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+          <span class="read">1M Reads</span>
+          <img src="ahsan_manzil.jpg" class="card-img-top" alt="...">
+          <div class="card-body p-0 ps-1">
+            <figure>
+              <blockquote class="blockquote">
+                <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">Ahsan Manzil Tour 2022</p>
+              </blockquote>
+              <figcaption class="blockquote-footer">
+                <cite title="Source Title thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author">Bangladeshi Traveler</cite>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 text-center">
+        <small><a class="text-dark fw-bolder" href="javascript:void(0)">Show All Tutorial Booklets</a></small>
+      </div>
+  </div>
+  <div class="row p-2">
+    <hr>
+  </div>
+  <div class="row">
+    <div class="pt-4 text-center bg-success-subtle" style="height: content;width: 100%;">
+      <span class="fw-bold">Developed by Muhammad Arif Rathin 2025</span>
+    </div>
+  </div>
+    </div>
+
+    <!-- Log In Modal Starts Here -->
+    <div class="modal" id="log-in-modal-id" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="text-center">
+              <span class="fw-bold h4">Log In</span>
+            </div>
+            <hr>
+            <div class="text-center">
+              <h6>Log In Using Email</h6>
+            </div>
+            <form class="form-group" action="">
+              <label class="fw-bold">Email</label>
+              <input class="form-control" type="text">
+              <label class="fw-bold">Password</label>
+              <input class="form-control" type="password">
+              <button class="form-control mt-1 btn btn-success" type="submit">Log In</button>
+            </form>
+            <hr>
+            <div class="text-center">
+              <h6>Or</h6>
+              <a class="btn btn-sm btn-outline-success" href="javascript:void(0)"><img class="img img-fluid" style="width: 30px;" src="search.png" alt=""><span class="ms-1">Log In Using Google</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Log In Modal Ends Here -->
+
+        <!-- Sign Up Modal Starts Here -->
+        <div class="modal" id="sign-up-modal-id" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="text-center">
+                  <span class="fw-bold h4">Sign Up</span>
+                </div>
+                <hr>
+                <div class="text-center">
+                  <h6>Sign Up Using Email</h6>
+                </div>
+                <form class="form-group" action="">
+                  <label class="fw-bold">First Name</label>
+                  <input class="form-control" type="text">
+                  <label class="fw-bold">Last Name</label>
+                  <input class="form-control" type="text">
+                  <label class="fw-bold">Email</label>
+                  <input class="form-control" type="text">
+                  <label class="fw-bold">Password</label>
+                  <input class="form-control" type="password">
+                  <label class="fw-bold">Re-type Password</label>
+                  <input class="form-control" type="password">
+                  <button class="form-control mt-1 btn btn-success" type="submit">Sign Up</button>
+                </form>
+                <hr>
+                <div class="text-center">
+                  <h6>Or</h6>
+                  <a class="btn btn-sm btn-outline-success" href="javascript:void(0)"><img class="img img-fluid" style="width: 30px;" src="search.png" alt=""><span class="ms-1">Log In Using Google</span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Sign Up Modal Ends Here -->
+  </body>
+<script type="text/javascript" src="bootstrap.bundle.min.js"></script>
+</html>

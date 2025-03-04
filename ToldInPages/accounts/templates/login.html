@@ -1,0 +1,20 @@
+<html>
+    {% load socialaccount %}
+    <head>
+        <title>Told In Pages</title>
+    </head>
+    <body>
+        <div>
+            <form action="{% url 'log-in' %}" method="POST">
+                {% csrf_token %}
+                <label for="">Email</label>
+                <input type="text" name="email">
+                <label for="">Password</label>
+                <input type="text" name="password">
+                <button type="submit">Log In</button>
+            </form>
+            <h1>or</h1>
+            <a href="{% provider_login_url 'google' %}">Sign in with Google</a>
+        </div>
+    </body>
+</html>

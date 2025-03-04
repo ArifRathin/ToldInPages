@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>My Booklets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+{% block content %}
+<div class="row p-2">
+    <div class="col-lg-2 col-md-12 chapter-index h-100 bg-success-subtle mt-2 rounded-2">
+        <div class="text-center">
+            <h5 class="taxt-dark">Your Publications</h5>
+            <hr>
+        </div>
+        <div class="text-start">
+            <ul class="list-unstyled">
+                {% for booklet in request.user.published_booklets|slice:":5" %}
+                    <li><a class="text-dark fw-bold" href="{% url 'show-book-cover' booklet.id %}">{{booklet.title}}</a></li>
+                    {% if not forloop.last %}
+                        <hr>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-7 col-md-12 col-12 mt-2">
+        {% for message in messages %}
+            {% if message.extra_tags == 'chapter-created' %}
+                <div class="alert alert-success">
+                    <span>{{message}}</span>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <div class="border border-dark rounded-2 text-center p-3">
+            <span class="h4 fw-bold">
+                <a class="text-dark text-decoration-none" href="{% url 'show-book-cover' booklet.id %}">
+                    <img class="img img-fluid" style="width: 35px;" src="/media/{{booklet.cover_photo}}" alt="">
+                    {{booklet.title}}
+                </a>
+            </span>
+            <p><small>{{booklet.chapter_count}} Chapter(s)</small></p>
+        </div>
+        {% if request.user.is_authenticated %}
+            {% if request.user.id == booklet.user.id %}
+                <div class="text-end">
+                    <a class="btn btn-sm btn-info text-dark fw-bold my-1" href="{% url 'show-create-chapter' booklet.id %}">Add chapter</a>
+                </div>
+            {% endif %}
+        {% endif %}
+        {% for message in messages %}
+            {% if message.extra_tags == 'page-limit' %}
+                <div class="alert alert-info">
+                    <span>{{message}}</span>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="mybooklet-hider">Pages</th>
+                    {% if request.user.is_authenticated %}
+                        {% if booklet.user.id == request.user.id %}
+                            <th>Action</th>
+                        {% endif %}
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for chapter in booklet.all_chapters %}
+                <tr>
+                    <td>{{chapter.name}}</td>
+                    <td class="mybooklet-hider">
+                        <a class="text-muted" href="{% url 'all-pages' booklet_id=booklet.id chapter_id=chapter.id %}">{{chapter.page_count}}</a>
+                    </td>
+                    {% if request.user.is_authenticated %}
+                    {% if booklet.user.id == request.user.id %}
+                    <td>
+                        <a class="text-decoration-none text-dark fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-ellipsis-v"></i>
+                          </a>
+                          <ul class="dropdown-menu">
+                            
+                            <li><a class="dropdown-item mybooklet-reverse-hider" href="{% url 'all-pages' booklet_id=booklet.id chapter_id=chapter.id %}">{{chapter.page_count}}</a></li>
+                            <li><a class="dropdown-item" href="{% url 'show-create-page' chapter_id=chapter.id %}">Add Page</a></li>
+                            <li><a class="dropdown-item" href="{% url 'show-edit-chapter' chapter_id=chapter.id %}">Edit</a></li>
+                            <li><a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#delete-modal-id" onclick="setDeletion('page','{% url 'delete-chapter' chapter.id %}')">Delete</a></li>
+                          </ul>
+                    </td>
+                    {% endif %}
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-lg-3 mt-2 text-center border border-dark rounded-2 vh-25 py-1" style="overflow-y: scroll;">
+        <h5 class="text-muted">You may like</h5>
+        <hr>
+        {% for suggestion in suggestions %}
+            <div class="row p-0" style="height:100px;" >
+                <div class="col-lg-5 col-5">
+                    <img class="img img-fluid" style="height:100px;width:100px;" src="/media/{{ suggestion.cover_photo }}" >
+                </div>
+                <div class="col-lg-7 col-7 text-start">
+                    <p class="mb-0">
+                        <a class="h6 text-dark text-decoration-none" href="{% url 'show-book-cover' suggestion.id %}">
+                            {% if suggestion.title|length > 20 %}
+                                {{suggestion.title|slice:":17"}}...
+                            {% else %}
+                                {{suggestion.title}}
+                            {% endif %}
+                        </a>
+                    </p>
+                    <p class="mt-0"><small><a class="text-muted fs-6 text-decoration-none" href="">{{suggestion.user.first_name}} {{suggestion.user.last_name}}</a></small></p>
+                    <p class="mt-0"><small class="fst-italic fs-6">{{suggestion.read}} Read(s)</small></p>
+                </div>
+            </div>
+            {% if not forloop.last %}
+                <hr class="my-1">
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block modals %}
+{% include 'modals/delete-modal.html' %}
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    function setDeletion(item_type,del_url){
+        $('#del-text-id').html(item_type);
+        $('#del-btn-id').attr('href',del_url);
+    }
+</script>
+{% endblock %}

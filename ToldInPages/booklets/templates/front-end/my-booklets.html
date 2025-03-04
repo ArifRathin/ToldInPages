@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>My Booklets</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+{% block content %}
+<div class="row p-2">
+    <div class="col-lg-2 col-md-12 chapter-index h-100 bg-success-subtle mt-2 rounded-2">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h3 class="taxt-dark">Stats</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="taxt-muted fw-bold">{{user.booklet_count}} </span>
+                <span class="text-muted">Booklet(s)</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="text-muted">Read</span>
+                <span class="taxt-muted fw-bold">{{user.booklet_read_count}} </span>
+                <span class="text-muted">Time(s)</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="taxt-muted fw-bold">{{user.published_booklet_count}} </span>
+                <span class="text-muted">Published Booklet(s)</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7 col-md-12 col-12 mt-2">
+        {% for message in messages %}
+            {% if message.extra_tags == 'chapter-limit' %}
+                <div class="alert alert-info">
+                    <span>{{message}}</span>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Cover</th>
+                    <th>Title</th>
+                    <th class="mybooklet-hider">Chapters</th>
+                    <th class="mybooklet-hider">Pages</th>
+                    <th class="{% if not request.user.is_authenticated or user.id != request.user.id %}mybooklet-reverse-hider{% endif %}">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booklet in all_booklets %}
+                <tr>
+                    <td>
+                        <img style="width:100px;" class="img img-responsive img-fluid" src="/media/{{booklet.cover_photo}}" alt="">
+                    </td>
+                    <td>
+                        <a class="text-dark fw-bold" href="{% url 'show-book-cover' booklet.id %}">{{booklet.title|slice:":15"}}...</a>
+                    </td>
+                    <td class="mybooklet-hider"><a class="text-muted" href="{% url 'all-chapters' booklet.id %}">{{booklet.chapter_count}}</a></td>
+                    <td class="mybooklet-hider"><a class="text-muted" href="{% url 'all-pages' booklet_id=booklet.id chapter_id=0 %}">{{booklet.page_count}}</a></td>
+                    <td class="{% if booklet.user.id != request.user.id %}mybooklet-reverse-hider{% endif %}">
+                        <a class="text-decoration-none text-dark fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-ellipsis-v"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item mybooklet-reverse-hider" href="{% url 'all-chapters' booklet.id %}">{{booklet.chapter_count}} Chapter(s)</a></li>
+                            <li><a class="dropdown-item mybooklet-reverse-hider" href="{% url 'all-pages' booklet_id=booklet.id chapter_id=0 %}">{{booklet.page_count}} Page(s)</a></li>
+                            {% if booklet.user.id == request.user.id %}
+                                <li><a class="dropdown-item" href="{% url 'show-create-chapter' booklet.id %}">Add Chapter</a></li>
+                                <li><a class="dropdown-item" href="{% url 'show-edit-booklet' booklet.id %}">Edit</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#delete-modal-id" onclick="setDeletion('booklet','{% url 'delete-booklet' booklet.id %}')">Delete</a></li>
+                            {% endif %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-center">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-center">
+                <li class="page-item {% if not all_booklets.has_previous %} disabled {% endif %}">
+                  <a class="page-link text-dark" href="{% if all_booklets.has_previous %}?page={{all_booklets.previous_page_number}}{% endif %}">Previous</a>
+                </li>
+                {% if all_booklets.has_previous %}
+                  <li class="page-item"><a class="page-link text-dark" href="?page={{all_booklets.previous_page_number}}">{{all_booklets.previous_page_number}}</a></li>
+                {% endif %}  
+                <li class="page-item active"><a class="page-link bg-success border border-success" href="?page={{all_booklets.number}}">{{all_booklets.number}}</a></li>
+                {% if all_booklets.has_next %}
+                  <li class="page-item"><a class="page-link text-dark" href="?page={{all_booklets.next_page_number}}">{{all_booklets.next_page_number}}</a></li>
+                {% endif %}
+                <li class="page-item {% if not all_booklets.has_next %} disabled {% endif %}">
+                  <a class="page-link text-dark" href="{% if all_booklets.has_next %}?page={{all_booklets.next_page_number}}{% endif %}">Next</a>
+                </li>
+                
+              </ul>
+            </nav>
+          </div>
+    </div>
+    <div class="col-lg-3 mt-2 text-center border border-dark rounded-2 vh-25 py-1" style="overflow-y: scroll;">
+        <h5 class="text-muted">You may like</h5>
+        <hr>
+        {% for suggestion in suggestions %}
+            <div class="row p-0" style="height:100px;" >
+                <div class="col-lg-5 col-5">
+                    <img class="img img-fluid" style="height:100px;width:100px;" src="/media/{{ suggestion.cover_photo }}" >
+                </div>
+                <div class="col-lg-7 col-7 text-start">
+                    <p class="mb-0">
+                        <a class="h6 text-dark text-decoration-none" href="{% url 'show-book-cover' suggestion.id %}">
+                            {% if suggestion.title|length > 20 %}
+                                {{suggestion.title|slice:":17"}}...
+                            {% else %}
+                                {{suggestion.title}}
+                            {% endif %}
+                        </a>
+                    </p>
+                    <p class="mt-0"><small><a class="text-muted fs-6 text-decoration-none" href="">{{suggestion.user.first_name}} {{suggestion.user.last_name}}</a></small></p>
+                    <p class="mt-0"><small class="fst-italic fs-6">{{suggestion.read}} Read(s)</small></p>
+                </div>
+            </div>
+            {% if not forloop.last %}
+                <hr class="my-1">
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block modals %}
+{% include 'modals/delete-modal.html' %}
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    function setDeletion(item_type,del_url){
+        $('#del-text-id').html(item_type);
+        $('#del-btn-id').attr('href',del_url);
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+{% block content %}
+<div class="row my-3">
+    <div class="col-lg-2 bg-success-subtle h-100 rounded-3">
+      {% if request.user.is_authenticated %}
+        {% if request.user.id == user.id %}
+          <button class="form-control btn btn-info fw-bold mt-2 mb-0" data-bs-toggle="modal" data-bs-target="#edit-profile-modal-id">Edit</button>
+        {% else %}
+          <label id="follow-label-id" for="" class="form-control btn btn-info mt-2 mb-0 d-none">Updating...</label>
+          <button id="follow-btn-id" class="form-control btn btn-info fw-bold mt-2 mb-0" onclick="follow('{% url 'follow' %}',{{user.id}})">{% if if_following %}Following{% else %}Follow{% endif %}</button>
+        {% endif %}
+      {% endif %}
+        <div class="text-center"><a class="text-decoration-none" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#profile-photo-modal-id" ><img src="/media/{{user.profile_photo}}" class="img img-fluid rounded-2 mt-1" style="overflow: hidden;" alt=""></a></div>
+        <p class="h4 text-center">{{user.first_name}} {{user.last_name}}</p>
+        <hr>
+        <p class="h6 mb-0">
+            Booklets
+        </p>
+        <span class="text-muted mb-0 fw-bold">{{user.booklet_count}}</span>
+        <hr class="mb-0">
+        <p class="h6 mb-0">
+            Total Reads
+        </p>
+        <span class="text-muted mb-0 fw-bold">{{user.booklet_read_count}}</span>
+        <hr class="mb-0">
+        <p class="h6 mt-0">
+            Avg. Rating
+        </p>
+        <span class="text-muted mb-0 fw-bold">{% if avg_rating > 0 %}{{avg_rating}}/5{% else %} <small class="fst-italic">Not rated yet</small>{% endif %}</span>
+        <hr class="mb-0">
+        <p class="h6 mt-0">
+            Followers
+        </p>
+        <span class="text-muted mb-0 fw-bold">{{user.follower_count}}</span>
+        <hr class="mb-0">
+        <p class="h6 mt-0">
+            Following
+        </p>
+        <span class="text-muted mb-0 fw-bold">{{user.following_count}}</span>
+    </div>
+
+    <div class="col-lg-10">
+      <div class="col-lg-12 text-end my-2">
+        {% if request.user.is_authenticated %}
+          {% if request.user.is_admin %}
+            <a class="btn btn-info fw-bold" href="{% url 'all-categories' %}">Category List</a>
+          {% endif %}
+            <a class="btn btn-info fw-bold" href="{% url 'create-booklet' %}">Create A Booklet</a>
+        {% else %}
+          <a class="btn btn-info fw-bold text-dark fw-bold text-decoration-none" data-bs-toggle="modal" data-bs-target="#log-in-modal-id" href="javascript:void(0)" onclick="$('#next-page-id').val('{% url 'create-booklet' %}')">Create A Booklet</a>
+        {% endif %}
+      </div>
+
+      {% if request.user.is_authenticated and request.user.id == user.id and request.user.is_admin %}
+      <div class="row">
+        <div class="col-lg-3">
+          <div class="card text-dark bg-light my-3">
+            <div class="fw-bold text-muted text-center">Users</div>
+            <div class="card-body text-center">
+              <p class="card-text h1">{{user_count}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="card text-dark bg-light my-3">
+            <div class="fw-bold text-muted text-center">Categories</div>
+            <div class="card-body text-center">
+              <p class="card-text h1">{{category_count}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="card text-dark bg-light my-3">
+            <div class="fw-bold text-muted text-center">Booklets</div>
+            <div class="card-body text-center">
+              <p class="card-text h1">{{booklet_count}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="card text-dark bg-light my-3">
+            <div class="fw-bold text-muted text-center">Pages</div>
+            <div class="card-body text-center">
+              <p class="card-text h1">{{page_count}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="card text-dark bg-light my-3">
+            <div class="fw-bold text-muted text-center">Published booklets</div>
+            <div class="card-body text-center">
+              <p class="card-text h1">{{published_booklet_count}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="card text-dark bg-light my-3">
+            <div class="fw-bold text-muted text-center">Published Pages</div>
+            <div class="card-body text-center">
+              <p class="card-text h1">{{published_page_count}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+    <div class="row">
+    {% for booklet in booklets %}
+    <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+      <a class="text-decoration-none" href="{% url 'show-book-cover' booklet.id %}">
+      <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+        <span class="read">{{booklet.read}} Read(s)</span>
+        <img src="/media/{{booklet.cover_photo}}" class="img img-fluid" style="overflow: hidden;" alt="...">
+        <div class="card-body p-0 ps-1">
+          <figure>
+            <blockquote class="blockquote">
+              <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">
+                {% if booklet.title|length > 20 %}
+                  {{booklet.title|slice:":17"}}...
+                {% else %}
+                  {{booklet.title}}
+                {% endif %}
+              </p>
+            </blockquote>
+          </figure>
+        </div>
+        <div class="card-footer pb-0 text-muted text-end">
+          <p class="pb-1 mb-0 ps-0 text-start"><span class="me-auto me-0 pe-1 pb-0 mb-0 text-dark"><small>{{booklet.publishing_time|date:'Y-M-d H:i'}} |</small></span>
+            <span class="text-start ms-auto text-dark fw-bold"><small><i class="fa fa-star {% if booklet.avg_rating %} text-warning{% endif %}"></i>{% if booklet.avg_rating %}{{booklet.avg_rating}}{% else %}(N/A){% endif %}</small></span></p>
+        </div>
+      </div>
+    </a>
+    </div>
+    {% endfor %}
+    <div class="col-lg-12 text-center">
+      <small><a class="text-dark fw-bolder" href="{% url 'all-booklets' user.id %}">Show All</a></small>
+    </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+{% block modals %}
+{% include 'modals/edit-profile.html' %}
+{% include 'modals/profile-photo.html' %}
+{% include 'modals/login.html' %}
+{% include 'modals/sign-up.html' %}      
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+  function follow(url,followed_id){
+    console.log(url)
+    console.log(followed_id)
+    $('#follow-label-id').removeClass('d-none')
+    $('#follow-btn-id').addClass('d-none')
+    $.ajax({
+      type:'GET',
+      url:url,
+      data:{followed_id:followed_id},
+      success:function(response){
+        $('#follow-label-id').addClass('d-none')
+        $('#follow-btn-id').removeClass('d-none')
+        console.log(response)
+        if(response[0] == 200){
+          $('#follow-btn-id').html(response[1])
+        }
+      }
+    });
+  }
+
+
+    $('#profile-form-id').on('submit', function(e){
+        e.preventDefault()
+        var formData = new FormData(this)
+        $.ajax({
+            xhr:function(){
+                xhr = $.ajaxSettings.xhr();
+                xhr.addEventListener('progress', function(e){}, false);
+                if(xhr.upload){
+                    xhr.upload.onprogress = function(e){
+                        var loaded = e.loaded;
+                        var total = e.total;
+                        var progress = Math.round((loaded/total)*100);
+                        $('#progress-bar-id').attr('aria-valuenow',progress).css('width',progress+'%').text(progress+'%')
+                    }
+                }
+                return xhr;
+            },
+            type:'POST',
+            url:"{% url 'update-profile' %}",
+            data:formData,
+            processData:false,
+            contentType:false,
+            success:function(response){
+                console.log(response);
+                $('#btn-id').removeClass('d-none')
+                $('#label-id').addClass('d-none')
+                if(response[0] == 'info'){
+                  if($('#msg-info-div-id-prof').hasClass('d-none')){
+                    $('#msg-info-div-id-prof').removeClass('d-none');
+                  }
+                  if(!$('#msg-error-div-id-prof').hasClass('d-none')){
+                    $('#msg-error-div-id-prof').addClass('d-none');
+                  }
+                  if(!$('#msg-success-div-id-prof').hasClass('d-none')){
+                    $('#msg-success-div-id-prof').addClass('d-none');
+                  }
+                  $('#msg-info-div-id-prof').text(response[1])
+                }
+                else if(response[0] == 'error'){
+                  if($('#msg-error-div-id-prof').hasClass('d-none')){
+                    $('#msg-error-div-id-prof').removeClass('d-none');
+                  }
+                  if(!$('#msg-info-div-id-prof').hasClass('d-none')){
+                    $('#msg-info-div-id-prof').addClass('d-none');
+                  }
+                  if(!$('#msg-success-div-id-prof').hasClass('d-none')){
+                    $('#msg-success-div-id-prof').addClass('d-none');
+                  }
+                  $('#msg-error-div-id-prof').text(response[1])
+                }
+                else if(response[0] == 'success'){
+                  if($('#msg-success-div-id-prof').hasClass('d-none')){
+                    $('#msg-success-div-id-prof').removeClass('d-none');
+                  }
+                  if(!$('#msg-info-div-id-prof').hasClass('d-none')){
+                    $('#msg-info-div-id-prof').addClass('d-none');
+                  }
+                  if(!$('#msg-error-div-id-prof').hasClass('d-none')){
+                    $('#msg-error-div-id-prof').addClass('d-none');
+                  }
+                  $('#msg-success-div-id-prof').text(response[1])
+                }
+            }
+        });
+    });
+    function updateDisablerFunc(msg){
+      $('#btn-id').addClass('d-none')
+      $('#label-id').removeClass('d-none')
+      $('#label-id').html(msg)
+    }
+</script>
+{% endblock %}

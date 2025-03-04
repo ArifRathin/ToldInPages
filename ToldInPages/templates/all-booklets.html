@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Told In Pages</title>
+{% endblock %}
+{% block content %}
+  <div class="row">
+    {% for booklet in booklets %}
+      {% if forloop.first %}
+      <div class="col-lg-12 text-center mt-3">
+        {% if type == 'by_category' %}
+          <h3 class="fw-bolder">{{ booklet.category.name }} Booklets</h3>
+        {% elif type == 'by_follow' %}
+          <h3 class="fw-bolder">Accounts You Follow</h3>
+        {% endif %}
+      </div>
+      {% endif %}
+      <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+        <a class="text-decoration-none" href="{% url 'show-book-cover' booklet_id=booklet.id %}">
+        <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+          <span class="read">{{booklet.read}} Reads</span>
+          <img src="/media/{{ booklet.cover_photo }}" class="card-img-top" style="overflow: hidden;" alt="...">
+          <div class="card-body p-0 ps-1">
+            <figure>
+              <blockquote class="blockquote">
+                <p class="h6 thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">{{ booklet.title }}</p>
+              </blockquote>
+              <figcaption class="blockquote-footer">
+                <cite class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">{{ booklet.user.first_name }} {{ booklet.user.last_name }}</cite>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+        </a>
+      </div>
+    {% endfor %}
+    <div class="text-center">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li class="page-item {% if not booklets.has_previous %} disabled {% endif %}">
+            <a class="page-link text-dark" href="{% if booklets.has_previous %}?page={{booklets.previous_page_number}}{% endif %}">Previous</a>
+          </li>
+          {% if booklets.has_previous %}
+            <li class="page-item"><a class="page-link text-dark" href="?page={{booklets.previous_page_number}}">{{booklets.previous_page_number}}</a></li>
+          {% endif %}  
+          <li class="page-item active"><a class="page-link bg-success border border-success" href="?page={{booklets.number}}">{{booklets.number}}</a></li>
+          {% if booklets.has_next %}
+            <li class="page-item"><a class="page-link text-dark" href="?page={{booklets.next_page_number}}">{{booklets.next_page_number}}</a></li>
+          {% endif %}
+          <li class="page-item {% if not booklets.has_next %} disabled {% endif %}">
+            <a class="page-link text-dark" href="{% if booklets.has_next %}?page={{booklets.next_page_number}}{% endif %}">Next</a>
+          </li>
+          
+        </ul>
+      </nav>
+    </div>
+  </div>
+{% endblock %}
+{% block modals %}
+{% include 'modals/login.html' %}
+{% include 'modals/sign-up.html' %}      
+{% endblock %}

@@ -1,0 +1,43 @@
+    <!-- Edit Profile Modal Starts Here -->
+    <div class="modal" id="edit-profile-modal-id" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="text-center">
+                <span class="fw-bold h4">Profile</span>
+              </div>
+              <hr>
+              <div id="msg-info-div-id-prof" class="alert alert-info d-none"></div>
+              <div id="msg-error-div-id-prof" class="alert alert-danger d-none"></div>
+              <div id="msg-success-div-id-prof" class="alert alert-success d-none"></div>
+              <div>
+                <div class="row">
+                    <div class="col-4 m-auto">
+                        <img id="photo-id" class="img img-fluid" src="/media/{{ user.profile_photo }}" alt="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <form id="profile-form-id" class="form-group" action="{% url 'update-profile' %}" enctype="multipart/form-data" method="POST">
+                            {% csrf_token %}
+                            <label class="form-control btn btn-outline-success mt-3" for="change-photo-id">Change Photo</label>
+                            <input class="d-none" id="change-photo-id" type="file" name="profile_photo">
+                            <label class="mt-3 text-dark fw-bold">First Name</label>
+                            <input class="form-control" type="text" placeholder="First name" value="{{user.first_name}}" name="first_name">
+                            <input class="d-none" id="change-photo-id" type="file">
+                            <label class="mt-3 text-dark fw-bold">Last Name</label>
+                            <input class="form-control" type="text" placeholder="First name" value="{{user.last_name}}" name="last_name">
+                            <label id="label-id" class="alert alert-info form-control p-2 mt-2 mb-1 text-center d-none" for=""></label>
+                            <button id="btn-id" class="btn btn-success form-control mt-2" type="submit" onclick="updateDisablerFunc('Updating...')">Update</button>
+                        </form>
+                        <div class="progress">
+                          <div id="progress-bar-id" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Edit Profile Modal Ends Here -->

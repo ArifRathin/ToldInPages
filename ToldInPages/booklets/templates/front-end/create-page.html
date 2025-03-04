@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Create Page</title>
+{% endblock %}
+{% block content %}
+<div class="row p-2">
+    <div class="col-lg-2 chapter-index h-100 bg-success-subtle mt-2 rounded-2">
+        <div class="text-center">
+            <h5 class="taxt-dark">Chapters</h5>
+        </div>
+        <div class="text-start">
+            <ul class="list-unstyled">
+                {% for chapter in booklet.all_chapters %}
+                    <li>{{forloop.counter}}. {% if chapter.page_count > 0 %}<a class="text-dark fw-bold" href="{% url 'go-to-chapter' booklet_id=booklet.id chapter_no=forloop.counter %}">{{chapter.name}}</a>
+                    {% else %} <span>{{chapter.name}}</span> {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-7 mt-2">
+        <form id="page-form-id" class="form-group" action="{% url 'create-page' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="border border-dark rounded-2 text-center p-3">
+                <span class="h4 fw-bold">
+                    <a class="text-dark text-decoration-none" href="{% url 'show-book-cover' chapter.booklet.id %}">
+                        <img class="img img-fluid" style="width: 35px;" src="/media/{{chapter.booklet.cover_photo}}" alt="">
+                        {{chapter.booklet.title}}
+                    </a>
+                </span>
+                <input type="hidden" name="booklet_id" value="{{chapter.booklet.id}}">
+            </div>
+            <div class="border border-dark rounded-2 text-center mt-1 p-2">
+                <span class="h6 fw-bold">{{chapter.name}}</span>
+                <input type="hidden" name="chapter_id" value="{{chapter.id}}">
+            </div>
+            <div class="row">
+                <div class="col-lg-5 m-auto">
+                    <img id="photo-id" src="" class="img img-fluid my-2" alt=""><span id="image-close-id" class="remove-image rounded-circle d-none"><a class="text-decoration-none text-white" href="javascript:void(0)" onclick="removeImage()">X</a></span>
+                </div>
+            </div>
+            <small>(Max image upload size is 5 MB)</small>
+            <label class="form-control btn btn-outline-success mt-2" for="photo-file-id">Upload a Photo</label>
+            <input id="photo-file-id" class="form-control d-none" type="file" accept=".jpeg,.png,.jpg" name="photo" onchange="previewImage()">
+            <label class="fw-bold mt-2" for="">Description</label>
+            <Textarea class="form-control" placeholder="Description" name="description"></Textarea>
+            <button id="btn-id" class="btn btn-success mt-2 form-control" type="submit"  onclick="disablerFunc('Creating page...')">Create Page</button>
+            <label id="label-id" class="alert alert-info form-control text-center mt-1 py-1 d-none" for=""></label>
+        </form>
+        <div class="row mb-2">
+            <div id="info-div-id" class="col-lg-10 m-auto alert alert-info d-none py-1 px-2">
+                <p id="response-msg-id"></p>
+            </div>
+        </div>
+        <div class="progress">
+            <div id="progress-bar-id" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+          </div>
+    </div>
+    <div class="col-lg-3 mt-2 text-center border border-dark rounded-2 vh-25 py-1" style="overflow-y: scroll;">
+        <h5 class="text-muted">You may like</h5>
+        <hr>
+        {% for suggestion in suggestions %}
+            <div class="row p-0" style="height:100px;" >
+                <div class="col-lg-5 col-5">
+                    <img class="img img-fluid" style="height:100px;width:100px;" src="/media/{{ suggestion.cover_photo }}" >
+                </div>
+                <div class="col-lg-7 col-7 text-start">
+                    <p class="mb-0">
+                        <a class="h6 text-dark text-decoration-none" href="{% url 'show-book-cover' suggestion.id %}">
+                            {% if suggestion.title|length > 20 %}
+                                {{suggestion.title|slice:":17"}}...
+                            {% else %}
+                                {{suggestion.title}}
+                            {% endif %}
+                        </a>
+                    </p>
+                    <p class="mt-0"><small><a class="text-muted fs-6 text-decoration-none" href="">{{suggestion.user.first_name}} {{suggestion.user.last_name}}</a></small></p>
+                    <p class="mt-0"><small class="fst-italic fs-6">{{suggestion.read}} Read(s)</small></p>
+                </div>
+            </div>
+            {% if not forloop.last %}
+                <hr class="my-1">
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    function previewImage(){
+        img = event.target.files[0]
+        console.log(img.type)
+        if(img.type != 'image/jpeg' && img.type != 'image/png'){
+            alert("Please make sure the file is a JPG/PNG image!")
+        }
+        else if(img.size > (5*1024*1024)){
+            alert("Max upload size of image is 5 MB.")
+        }
+        else{
+            $('#photo-id').attr('src',URL.createObjectURL(img))
+            $('#image-close-id').removeClass('d-none')
+        }
+    }
+    function removeImage(){
+        $('#photo-file-id').val('')
+        $('#photo-id').attr('src','')
+        $('#image-close-id').addClass('d-none')
+    }
+
+    $('#page-form-id').on('submit',function(event){
+        event.preventDefault();
+        var formData = new FormData(this)
+        $.ajax({
+            xhr: function () {
+                myXhr = $.ajaxSettings.xhr();
+                myXhr.addEventListener('progress', function (e) { }, false);
+                if (myXhr.upload) {
+                    myXhr.upload.onprogress = function (e) {
+                    var completed = 0;
+                    if (e.lengthComputable) {
+                        var done = e.position || e.loaded;
+                        var total = e.totalSize || e.total;
+                        completed = Math.round((done / total * 1000) / 10);
+                        $('#progress-bar-id').attr('aria-valuenow',completed).css('width',completed+'%').text(completed+'%')
+                    }
+                    }
+                }
+                return myXhr;
+            },
+            type:'POST',
+            url:"{% url 'create-page' %}",
+            data:formData,
+            processData:false,
+            contentType:false,
+            success:function(response){
+                if(response[0] == 0){
+                    $('#btn-id').removeClass('d-none');
+                    $('#label-id').addClass('d-none')
+                    $('#info-div-id').removeClass('d-none');
+                    $('#response-msg-id').html(response[1]);
+                }
+                else if(response[0] == 200){
+                    var url = "{% url 'all-pages' booklet_id=chapter.booklet_id chapter_id=chapter.id %}"
+                    window.location.href = url
+                }
+            }
+        });
+    });
+    function disablerFunc(msg){
+      $('#btn-id').addClass('d-none')
+      $('#label-id').removeClass('d-none')
+      $('#label-id').html(msg)
+    }
+</script>
+{% endblock %}

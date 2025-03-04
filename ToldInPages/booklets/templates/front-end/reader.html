@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>Reader</title>
+{% endblock %}
+{% block content %}
+<div class="row p-2">
+    <div class="col-lg-3 chapter-index h-100 bg-success-subtle mt-2 rounded-2">
+        <div class="text-center">
+            <h5 class="taxt-dark">Chapters</h5>
+        </div>
+        <div class="text-start">
+            <ul class="list-unstyled">
+                {% for chapter in page.booklet.all_chapters %}
+                    <li>{{forloop.counter}}. {% if chapter.page_count > 0 %}<a class="text-dark {% if page.chapter.id == chapter.id %}fw-bold{% endif %}" href="{% url 'go-to-chapter' booklet_id=page.booklet.id chapter_no=forloop.counter %}">{{chapter.name}}</a>
+                    {% else %} <span>{{chapter.name}}</span> {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="row text-end">
+            <div class="col-lg-12">
+                {% if request.user.is_authenticated and request.user.id == page.booklet.user.id %}
+                    <a class="btn btn-sm fw-bold btn-info ms-auto me-1" href="{% url 'show-edit-page' page_id=page.id %}">Edit</a>
+                {% endif %}
+                <a class="btn btn-sm fw-bold btn-info ms-auto" href="{% url 'create-booklet' %}">Create a Booklet</a>
+
+            </div>
+        </div>
+        <div class="row p-2">
+            <div class="col-lg-12 text-center border border-dark rounded-2 p-2">
+                <figure>
+                    <blockquote class="blockquote">
+                      <p class="thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">
+                    <a class="h2 text-decoration-none" href="{% url 'show-book-cover' page.booklet.id  %}">
+                        <img class="img img-fluid" style="width: 35px;" src="/media/{{page.booklet.cover_photo}}" alt=""> {{page.booklet.title}}
+                    </a>
+                    </p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                      <cite class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">
+                        <a class="text-decoration-none text-muted" href="{% url 'profile' page.booklet.user.id %}">{{ page.booklet.user.first_name }} {{ page.booklet.user.last_name }}</a>
+                      </cite>
+                    </figcaption>
+                  </figure>
+                <!-- <span>
+                    <span class="p-2"><button class="btn btn-sm btn-warning">Rate</button></span><span>Rating 4.5/5.0</span><span class="p-2"><button class="btn btn-sm btn-info">Share</button></span>
+                </span> -->
+            </div>
+        </div>
+        <div class="mb-2">
+            <select class="form-control text-center fw-bold" name="" id="chapter-selector-id" onchange="goToChapter()">
+                <option value="" disabled>--Select Chapter--</option>
+                {% for chapter in page.booklet.all_chapters %}
+                    <option {% if chapter.page_count <= 0 %} disabled {% endif %} {% if page.chapter.id == chapter.id %} Selected {% endif %} value="{% url 'go-to-chapter' booklet_id=page.booklet.id chapter_no=forloop.counter %}">{{chapter.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% if page.photo %}
+            <img class="img img-fluid rounded-2 mb-2" src="/media/{{page.photo}}">
+        {% endif %}
+        <div class="border border-dark rounded p-2">
+            <p>
+                {{page.description}}
+            </p>
+        </div>
+        <div class="text-center p-2">
+            {% if prev_page > 0 %}<a class="text-dark text-decoration-none fw-bold" href="{% url 'load-page-in-reader' booklet_id=page.booklet.id page_no=prev_page %}"><</a>{% endif %} &nbsp; {{page_no}}/{{page.booklet.page_count}} &nbsp; {% if next_page <= page.booklet.page_count %}<a class="text-dark text-decoration-none fw-bold" href="{% url 'load-page-in-reader' booklet_id=page.booklet.id page_no=next_page %}">></a>{% endif %}
+        </div>
+    </div>
+    <div class="col-lg-3 mt-2 text-center border border-dark rounded-2 vh-25 py-1" style="overflow-y: scroll;">
+        <h5 class="text-muted">You may like</h5>
+        <hr>
+        {% for suggestion in suggestions %}
+            <div class="row p-0" style="height:100px;" >
+                <div class="col-lg-5 col-5">
+                    <img class="img img-fluid" style="height:100px;width:100px;" src="/media/{{ suggestion.cover_photo }}" >
+                </div>
+                <div class="col-lg-7 col-7 text-start">
+                    <p class="mb-0">
+                        <a class="h6 text-dark text-decoration-none" href="{% url 'show-book-cover' suggestion.id %}">
+                            {% if suggestion.title|length > 20 %}
+                                {{suggestion.title|slice:":17"}}...
+                            {% else %}
+                                {{suggestion.title}}
+                            {% endif %}
+                        </a>
+                    </p>
+                    <p class="mt-0"><small><a class="text-muted fs-6 text-decoration-none" href="">{{suggestion.user.first_name}} {{suggestion.user.last_name}}</a></small></p>
+                    <p class="mt-0"><small class="fst-italic fs-6">{{suggestion.read}} Read(s)</small></p>
+                </div>
+            </div>
+            {% if not forloop.last %}
+                <hr class="my-1">
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    function goToChapter(){
+        url = $('#chapter-selector-id').find(':selected').val()
+        location.href = url
+    }
+</script>
+{% endblock %}

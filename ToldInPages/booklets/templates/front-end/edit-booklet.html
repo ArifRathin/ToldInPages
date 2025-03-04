@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Create Booklet</title>
+{% endblock %}
+{% block content %}
+<div class="row p-2">
+    <div class="col-lg-2 chapter-index h-100 bg-success-subtle mt-2 rounded-2">
+        <div class="text-center">
+            <h5 class="taxt-dark">Chapters</h5>
+        </div>
+        <div class="text-start">
+            <ul class="list-unstyled">
+                {% for chapter in booklet.all_chapters %}
+                    <li>{{forloop.counter}}. {% if chapter.page_count > 0 %}<a class="text-dark" href="{% url 'go-to-chapter' booklet_id=booklet.id chapter_no=forloop.counter %}">{{chapter.name}}</a>
+                    {% else %} <span>{{chapter.name}}</span> {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-7 mt-2">
+        <form id="booklet-form-id" class="form-group" action="{% url 'edit-booklet' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="booklet_id" value="{{booklet.id}}">
+            <div class="text-center"><img id="photo-id" class="img img-fluid p-2 rounded-2" src="/media/{{booklet.cover_photo}}" alt=""><span id="image-close-id" class="remove-image-edit rounded-circle d-none"><a class="text-decoration-none text-white" href="javascript:void(0)" onclick="removeImage()">X</a></span></div>
+            <label class="form-control btn btn-outline-success" for="booklet-cover-id">Upload a Booklet Cover Photo</label>
+            <input id="booklet-cover-id" class="form-control d-none" type="file" name="cover_photo" onchange="previewImage()">
+            <label class="mt-3 fw-bold" for="">Title</label>
+            <input class="form-control" type="text" placeholder="Enter a title for your Booklet" name="title" value="{{booklet.title}}">
+            <label class="mt-3 fw-bold" for="">Tag Line</label>
+            <input class="form-control" type="text" placeholder="Tag line for your booklet" name="tag_line" value="{{booklet.tag_line}}">
+            <label class="mt-3 fw-bold" for="">Category</label>
+            <select class="form-control" name="category_id" id="">
+                {% for category in categories %}
+                    <option {% if booklet.category_id == category.id %}selected{% endif %} value="{{category.id}}">{{category.name}}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-success mt-2 form-control" type="submit">Save</button>
+        </form>
+        <div class="row mb-2">
+            <div id="info-div-id" class="col-lg-10 m-auto alert alert-info d-none py-1 px-2">
+                <p id="response-msg-id"></p>
+            </div>
+        </div>
+        <div class="progress">
+            <div id="progress-bar-id" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+    </div>
+    <div class="col-lg-3 mt-2 text-center border border-dark rounded-2 vh-25 py-1" style="overflow-y: scroll;">
+        <h5 class="text-muted">You may like</h5>
+        <hr>
+        {% for suggestion in suggestions %}
+            <div class="row p-0" style="height:100px;" >
+                <div class="col-lg-5 col-5">
+                    <img class="img img-fluid" style="height:100px;width:100px;" src="/media/{{ suggestion.cover_photo }}" >
+                </div>
+                <div class="col-lg-7 col-7 text-start">
+                    <p class="mb-0">
+                        <a class="h6 text-dark text-decoration-none" href="{% url 'show-book-cover' suggestion.id %}">
+                            {% if suggestion.title|length > 20 %}
+                                {{suggestion.title|slice:":17"}}...
+                            {% else %}
+                                {{suggestion.title}}
+                            {% endif %}
+                        </a>
+                    </p>
+                    <p class="mt-0"><small><a class="text-muted fs-6 text-decoration-none" href="">{{suggestion.user.first_name}} {{suggestion.user.last_name}}</a></small></p>
+                    <p class="mt-0"><small class="fst-italic fs-6">{{suggestion.read}} Read(s)</small></p>
+                </div>
+            </div>
+            {% if not forloop.last %}
+                <hr class="my-1">
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+    var cover_photo_url = "{{booklet.cover_photo}}"
+    function previewImage(){
+        img = event.target.files[0];
+        $('#photo-id').attr('src',URL.createObjectURL(img));
+        $('#image-close-id').removeClass('d-none');
+        $('#info-div-id').addClass('d-none');
+    }
+    function removeImage(){
+        $('#booklet-cover-id').val('');
+        $('#photo-id').attr('src',"/media/"+cover_photo_url);
+        $('#image-close-id').addClass('d-none');
+        $('#info-div-id').addClass('d-none');
+    }
+    $('#booklet-form-id').on('submit',function(e){
+        $('#progress-bar-id').css('width','0%');
+        e.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            xhr:function(){
+                xhr = $.ajaxSettings.xhr();
+                xhr.addEventListener('progress',function(e){},false);
+                if(xhr.upload){
+                    xhr.upload.onprogress = function(e){
+                        var loaded = e.loaded;
+                        var total = e.total;
+                        var progress = Math.round((loaded/total)*100,2);
+                        $('#progress-bar-id').attr('aria-valuenow',progress).css('width',progress+'%').text(progress+"%");
+                    }
+                }
+                return xhr;
+            },
+            type:'POST',
+            data:formData,
+            url: "{% url 'edit-booklet' %}",
+            processData:false,
+            contentType:false,
+            success:function(response){
+                if(response[0] == 0){
+                    $('#info-div-id').removeClass('d-none');
+                    $('#response-msg-id').html(response[1]);
+                }
+                else if(response[0] == 200){
+                    var url = "{% url 'show-book-cover' booklet.id %}"
+                    window.location.href = url
+                }
+            }
+        })
+    });
+</script>
+{% endblock %}

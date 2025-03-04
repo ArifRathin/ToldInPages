@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Told In Pages</title>
+    </head>
+    <body>
+        <div>
+            <form action="{% url 'create-page' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" name="booklet_id" value="{{booklet_id}}">
+                <select name="chapter_id" id="">
+                    <option value="">Select a chapter</option>
+                    {% for chapter in all_chapters %}
+                        <option {% if chapter.id == chapter_id %}selected{% endif %} value="{{chapter.id}}">{{chapter.name}}</option>
+                    {% endfor %}
+                </select><sup>Optional</sup>
+                <label for="">Photo</label>
+                <input type="file" name="photo">
+                <textarea name="description" id=""></textarea>
+                <button type="submit">Add Page</button>
+            </form>
+        </div>
+    </body>
+</html>

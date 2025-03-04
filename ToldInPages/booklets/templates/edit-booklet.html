@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>Told In Pages</title>
+    </head>
+    <body>
+        <div>
+            <img src="/media/{{ booklet.cover_photo}}" alt="Cover Photo" style="width: 300px; height:300px;">
+            <form action="{% url 'edit-booklet' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="text" name="booklet_id" value="{{booklet.id}}">
+                <input type="text" name="title" value="{{booklet.title}}">
+                <input type="text" name="tag_line" value="{{booklet.tag_line}}">
+                <input type="file" name="cover_photo">
+                <button type="submit">Update Booklet</button>
+            </form>
+        </div>
+    </body>
+</html>

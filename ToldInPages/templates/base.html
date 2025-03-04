@@ -1,0 +1,207 @@
+{% load static %}
+<html>
+  <head>
+    {% block title %}
+    {% endblock %}
+    <link rel="icon" href="{% static 'favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div class="container-fluid">
+        <!-- Navigation Bar Starts -->
+        <div class="row bg-success-subtle pt-1 pb-1">
+          <div class="col-lg-1 col-md-1 col-sm-1 col-1 pt-1">
+            <span class="fw-bolder mt-1">
+              <a class="text-decoration-none text-dark" href="{% url 'home' %}">TiP</a>
+            </span>
+          </div>
+          <div class="col-lg-7 col-md-7 col-sm-7 col-7 pe-0">
+            <form class="mb-0" action="{% url 'search-booklet-page' %}" method="GET">
+              <input id="search-input-id" class="form-control mb-0" type="text" name="keywords" placeholder="Search">
+
+            </form>
+            
+            <div id="suggestion-box-id" class="rounded-2 d-none" style="z-index: 5;height:auto; width:inherit;position:absolute;background-color: white;">
+              <ul id="suggestion-list-id" class="list-unstyled list-group">
+                
+              </ul>
+            </div>
+          </div>
+          {% if not request.user.is_authenticated %}
+          <div class="col-lg-4 col-md-4 col-sm-4 col-4">
+            <div class="row text-center mt-1">
+                <div class="col-6">
+                  <a class="text-dark fw-bold text-decoration-none navbar-custom-links" data-bs-toggle="modal" data-bs-target="#log-in-modal-id" href="javascript:void(0)" onclick="$('#next-page-id').val('{% url 'home' %}')">Log In</a>
+                </div>
+                <div class="col-6">
+                  <a class="text-dark fw-bold text-decoration-none navbar-custom-links" data-bs-toggle="modal" data-bs-target="#sign-up-modal-id" href="javascript:void(0)">Sign Up</a>
+                </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="col-lg-4 col-md-4 col-sm-4 col-4 text-end">
+            <div class="dropdown mt-1">
+              <a class="text-decoration-none text-dark fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{request.user.first_name}}
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'profile' request.user.id %}">Profile</a></li>
+                <li><a class="dropdown-item" href="{% url 'log-out' %}">Log out</a></li>
+              </ul>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        <!-- Navigation Bar Ends -->
+{% block content %}
+
+{% endblock %}
+<div class="row mb-0">
+    <div class="pt-4 text-center bg-success-subtle" style="position:relative; height: content;margin-top:40%;width: 100%;">
+      <span class="fw-bold">Developed by Muhammad Arif Rathin 2025</span>
+    </div>
+  </div>
+    </div>
+
+{% block modals %}
+
+{% endblock %}
+<script type="text/javascript" src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript">
+
+$('#search-input-id').focus(function(){
+  $('#suggestion-box-id').removeClass('d-none')
+});
+
+$(document).mouseup(function(e) 
+{
+    var suggestion_box = $("#suggestion-box-id");
+    if (!suggestion_box.is(e.target) && suggestion_box.has(e.target).length === 0) 
+    {
+      suggestion_box.addClass('d-none');
+    }
+});
+
+  $('#search-input-id').keydown(function(e){
+    console.log(e.which)
+    console.log($(this).val())
+    if(e.keyCode == 8){
+      console.log($(this).val().length)
+      if($(this).val().length<=1)
+      {
+        $('#suggestion-list-id').html('')
+      }
+    }
+    else if(e.keyCode == 46){
+      if($(this).val().length<=1)
+      {
+        $('#suggestion-list-id').html('')
+      }
+    }
+    else if($(this).val().length>1){
+      $.ajax({
+        type:"get",
+        url:"{% url 'search-suggestions' %}",
+        data:{'keywords':$(this).val()},
+        success:function(response){
+          $('#suggestion-list-id').html('')
+          $('#suggestion-box-id').removeClass('d-none')
+          console.log(response.booklets)
+          for(let i=0; i<response.booklets.length; i++){
+            console.log(response.booklets[i].title)
+            $('#suggestion-list-id').append('<li class="list-group-item"><a class="text-dark text-decoration-none" href="{% url 'search-booklet-page' %}?keywords='+response.booklets[i].title+'">'+response.booklets[i].title+'</a></li>')
+          }
+          console.log(response.authors)
+          for(let i=0; i<response.authors.length; i++){
+            console.log(response.authors[i].title)
+            $('#suggestion-list-id').append('<li class="list-group-item"><a class="text-dark text-decoration-none" href="{% url 'search-author-page' %}?keywords='+response.authors[i].first_name+'">'+response.authors[i].first_name+' '+response.authors[i].last_name+'</a></li>')
+          }
+        }
+      });
+    }
+  });
+  function showMsg(response,idSuffix){
+    $('#label-id'+idSuffix).addClass('d-none');
+        $('#btn-id'+idSuffix).removeClass('d-none');
+        $('#label-id'+idSuffix).text('');
+        if(response[0] == 'success'){
+          window.location.href=response[1]
+        }
+        else if(response[0] == 'error'){
+          if($('#error-msg-div-id'+idSuffix).hasClass('d-none')){
+            $('#error-msg-div-id'+idSuffix).removeClass('d-none');
+          }
+          if(!$('#info-msg-div-id'+idSuffix).hasClass('d-none')){
+            $('#info-msg-div-id'+idSuffix).addClass('d-none');
+          }
+          if(!$('#warning-msg-div-id'+idSuffix).hasClass('d-none')){
+            $('#warning-msg-div-id'+idSuffix).addClass('d-none');
+          }
+          $('#error-msg-div-id'+idSuffix).text(response[1]);
+        }
+        else if(response[0] == 'warning'){
+          if(!$('#error-msg-div-id'+idSuffix).hasClass('d-none')){
+            $('#error-msg-div-id'+idSuffix).addClass('d-none');
+          }
+          if(!$('#info-msg-div-id'+idSuffix).hasClass('d-none')){
+            $('#info-msg-div-id'+idSuffix).addClass('d-none');
+          }
+          if($('#warning-msg-div-id'+idSuffix).hasClass('d-none')){
+            $('#warning-msg-div-id').removeClass('d-none');
+          }
+        }
+        else if(response[0] == 'info'){
+          if(!$('#error-msg-div-id'+idSuffix).hasClass('d-none')){
+            $('#error-msg-div-id'+idSuffix).addClass('d-none');
+          }
+          if($('#info-msg-div-id'+idSuffix).hasClass('d-none')){
+            $('#info-msg-div-id'+idSuffix).removeClass('d-none');
+          }
+          if(!$('#warning-msg-div-id'+idSuffix).hasClass('d-none')){
+            $('#warning-msg-div-id'+idSuffix).addClass('d-none');
+          }
+          $('#info-msg-div-id'+idSuffix).text(response[1]);
+        }
+  }
+  function disablerFunc(lblId,btnId,msg){
+    $('#'+lblId).removeClass('d-none')
+    $('#'+btnId).addClass('d-none')
+    $('#'+lblId).html(msg)
+  }
+  function submitForm(formData,url,idSuffix){
+    $.ajax({
+      type:'POST',
+      data:formData,
+      url:url,
+      contentType:false,
+      processData:false,
+      success:function(response){
+        console.log(response);
+        if(response[0] == 'success' && response[1] == 'verify'){
+          $('#email-verify-id').val($('#email-su').val());
+          $('#verify-form-id').submit();
+        }
+        else{
+          showMsg(response,idSuffix);
+        }
+      }
+    });
+  }
+  $('#login-form-id').on('submit',function(event){
+    event.preventDefault();
+    var formData = new FormData(this);
+    submitForm(formData,"{% url 'log-in' %}",'-li');
+  });
+  $('#signup-form-id').on('submit',function(event){
+    event.preventDefault();
+    var formData = new FormData(this);
+    submitForm(formData,"{% url 'sign-up' %}",'-su');
+  });
+</script>
+{% block scripts %}
+{% endblock %}
+</body>
+</html>

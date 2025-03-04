@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>Told In Pages</title>
+    </head>
+    <body>
+        <div>
+            <img src="/media/{{page.photo}}" alt="Page Photo" style="width: 300px; height: 300px;">
+            
+            
+            
+            <form action="{% url 'edit-page' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="text" name="page_id" value="{{page.id}}">
+                <input type="file" name="photo">
+                <textarea name="description" id="">{{page.description}}</textarea>
+                <button type="submit">Update</button>
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,114 @@
+.read{
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 10px;
+    padding: 2px;
+    font-size: 12px;
+    width: 82px;
+    color: aliceblue;
+    background-color: black;
+    opacity: 0.6;
+    text-align: center;
+}
+.remove-image{
+    position: absolute;
+    margin-top: 7px;
+    opacity: 0.7;
+    background-color: black;
+    margin-left: -15px;
+    font-size: 20px;
+    width: 30px;
+    color: aliceblue;
+    text-align: center;
+}
+.remove-image-edit{
+    position: absolute;
+    margin-top: 4px;
+    opacity: 0.4;
+    background-color: black;
+    margin-left: -25px;
+    font-size: 20px;
+    width: 30px;
+    color: aliceblue;
+    text-align: center;
+}
+@media(max-width:400px){
+    .thumbnail-xs-booklet{
+        height:200px;
+    }
+    .thumbnail-xs-booklet-title{
+        font-size:14px;
+    }
+    .thumbnail-xs-booklet-author{
+        font-size:12px;
+    }
+    .thumbnail-xs-booklet-timestamp{
+        font-size:10px;
+    }
+    .navbar-custom-links{
+        font-size: 11px;
+        padding-left: 2px;
+    }
+}
+@media(min-width:401px) and (max-width:476px){
+    .thumbnail-xsm-booklet{
+        height:220px;
+    }
+    .thumbnail-xsm-booklet-title{
+        font-size:14px;
+    }
+    .thumbnail-xsm-booklet-author{
+        font-size:12px;
+    }
+    .thumbnail-xsm-booklet-timestamp{
+        font-size:10px;
+    }
+}
+@media(min-width:477px) and (max-width:575px){
+    .thumbnail-xsm-booklet{
+        height:250px;
+    }
+    .thumbnail-xsm-booklet-title{
+        font-size:14px;
+    }
+    .thumbnail-xsm-booklet-author{
+        font-size:12px;
+    }
+    .thumbnail-xsm-booklet-timestamp{
+        font-size:10px;
+    }
+}
+@media(min-width:576px) and (max-width:838px){
+    .thumbnail-mds-booklet{
+        height:250px;
+    }
+    .thumbnail-mds-booklet-title{
+        font-size:15px;
+    }
+    .thumbnail-mds-booklet-author{
+        font-size:14px;
+    }
+    .thumbnail-mds-booklet-timestamp{
+        font-size:12px;
+    }
+}
+@media(min-width:992px){
+    .thumbnail-booklet{
+        height:280px;
+    }
+}
+@media screen and (max-width:991px){
+    .chapter-index{
+        display: none;
+    }
+}
+@media(max-width:768px){
+    .mybooklet-hider{
+        display: none;
+    }
+}
+@media(min-width:769px){
+    .mybooklet-reverse-hider{
+        display: none;
+    }
+}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Told In Pages</title>
+{% endblock %}
+{% block content %}
+<!-- Create Booklet Banner Starts -->
+<div class="row bg-success mt-2">
+    <div class="col-lg-12 text-center mt-2 mb-2">
+      <h3 class="text-white">Write about anything and publish as booklets!</h3>
+      {% if not request.user.is_authenticated %}
+        <a class="btn btn-info fw-bold text-dark fw-bold text-decoration-none" data-bs-toggle="modal" data-bs-target="#log-in-modal-id" href="javascript:void(0)" onclick="$('#next-page-id').val('{{request.build_absolute_uri}}{% url 'create-booklet' %}')">Create A Booklet</a>
+      {% else %}
+        <a class="btn btn-info fw-bold text-dark fw-bold text-decoration-none" href="{% url 'create-booklet' %}">Create A Booklet</a>
+      {% endif %}
+    </div>
+  </div>
+  <!-- Create Booklet Banner Ends -->
+  {% for booklets in followed_booklets %}
+  <div class="row">
+    {% for booklet in booklets %}
+      {% if forloop.first %}
+      <div class="col-lg-12 text-center mt-3">
+        <h3 class="fw-bolder">Accounts You Follow</h3>
+      </div>
+      {% endif %}
+      <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+        <a class="text-decoration-none" href="{% url 'show-book-cover' booklet_id=booklet.id %}">
+        <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+          <span class="read">{{booklet.read}} Reads</span>
+          <img src="/media/{{ booklet.cover_photo }}" class="img img-fluid card-img-top" style="overflow: hidden;" alt="...">
+          <div class="card-body p-0 ps-1">
+            <figure>
+              <blockquote class="blockquote">
+                <p class="h6 thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">
+                  {% if booklet.title|length > 15 %}
+                    {{ booklet.title|slice:":12" }}...
+                  {% else %}
+                    {{ booklet.title }}
+                  {% endif %}
+                </p>
+              </blockquote>
+              <figcaption class="blockquote-footer">
+                <cite class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">{{ booklet.user.first_name }} {{ booklet.user.last_name }}</cite>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+        </a>
+      </div>
+      {% if forloop.last %}
+        <div class="col-lg-12 text-center">
+          <small><a class="text-dark fw-bolder" href="{% url 'booklets-by-follow' %}">Show All</a></small>
+          <div class="row p-2">
+            <hr>
+          </div>
+        </div>
+      {% endif %}
+      {% endfor %}
+  </div>
+  {% endfor %}
+
+
+
+  {% for booklets in home_booklets %}
+  <div class="row">
+    {% for booklet in booklets %}
+      {% if forloop.first %}
+      <div class="col-lg-12 text-center mt-3">
+        <h3 class="fw-bolder">{{ booklet.category.name }} Booklets</h3>
+      </div>
+      {% endif %}
+      <div class="col-lg-3 col-md-4 col-sm-4 col-6">
+        <a class="text-decoration-none" href="{% url 'show-book-cover' booklet_id=booklet.id %}">
+        <div class="card mb-3 border border-4 border-dark rounded-3 thumbnail-xs-booklet thumbnail-xsm-booklet thumbnail-mds-booklet thumbnail-booklet">
+          <span class="read">{{booklet.read}} Reads</span>
+          <img src="/media/{{ booklet.cover_photo }}" class="card-img-top" style="overflow: hidden;" alt="...">
+          <div class="card-body p-0 ps-1">
+            <figure>
+              <blockquote class="blockquote">
+                <p class="h6 thumbnail-xs-booklet-title thumbnail-xsm-booklet-title thumbnail-mds-booklet-title">
+                  {% if booklet.title|length > 30 %}
+                    {{ booklet.title|slice:":27" }}...
+                  {% else %}
+                    {{ booklet.title }}
+                  {% endif %}
+                </p>
+              </blockquote>
+              <figcaption class="blockquote-footer">
+                <cite class="thumbnail-xs-booklet-author thumbnail-xsm-booklet-author thumbnail-mds-booklet-author" title="Source Title">{{ booklet.user.first_name }} {{ booklet.user.last_name }}</cite>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+        </a>
+      </div>
+      {% if forloop.last %}
+        <div class="col-lg-12 text-center">
+          <small><a class="text-dark fw-bolder" href="{% url 'booklets-by-category' booklet.category.id %}">Show All</a></small>
+          <div class="row p-2">
+            <hr>
+          </div>
+        </div>
+      {% endif %}
+      {% endfor %}
+  </div>
+{% endfor %}
+{% endblock %}
+{% block modals %}
+{% include 'modals/login.html' %}
+{% include 'modals/sign-up.html' %}      
+{% endblock %}

@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title>Told In Pages</title>
+    </head>
+    <body>
+        <div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="">Title</label>
+                <input type="text" name="title">
+                <label for="">Tag Line</label>
+                <input type="text" name="tag_line">
+                <label for="">Category</label>
+                <select name="category_id" id="">
+                    {% for category in categories %}
+                        <option value="{{category.id}}">{{category.name}}</option>
+                    {% endfor %}
+                </select>
+                <label for="">Cover Photo</label>
+                <input type="file" name="cover_photo">
+                <button type="submit">Create Booklet</button>
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,45 @@
+{% load socialaccount %}
+<!-- Sign Up Modal Starts Here -->
+<div class="modal" id="sign-up-modal-id" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="text-center">
+            <span class="fw-bold h4">Sign Up</span>
+          </div>
+          <hr>
+          <div id="info-msg-div-id-su" class="alert alert-info d-none"></div>
+          <div id="error-msg-div-id-su" class="alert alert-danger d-none"></div>
+          <div id="warning-msg-div-id-su" class="alert alert-warning d-none"></div>
+          <div class="text-center">
+            <h6>Sign Up Using Email</h6>
+          </div>
+          <form id="signup-form-id" class="form-group" action="{% url 'sign-up' %}" method="POST">
+            {% csrf_token %}
+            <label class="fw-bold">First Name</label>
+            <input class="form-control" type="text" name="first_name">
+            <label class="fw-bold">Last Name</label>
+            <input class="form-control" type="text" name="last_name">
+            <label class="fw-bold">Email</label>
+            <input id="email-su" class="form-control" type="text" name="email">
+            <label class="fw-bold">Password</label>
+            <input class="form-control" type="password" name="password">
+            <label class="fw-bold">Re-type Password</label>
+            <input class="form-control" type="password" name="retype_password">
+            <label id="label-id-su" class="alert alert-info form-control p-2 mt-2 mb-1 text-center d-none" for=""></label>
+            <button id="btn-id-su" class="form-control mt-1 btn btn-success" type="submit" onclick="disablerFunc('label-id-su',this.id,'Signing up...')">Sign Up</button>
+          </form>
+          <form id="verify-form-id" class="d-none" action="{% url 'show-verify-page' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" id="email-verify-id" name="verify-email">
+          </form>
+          <hr>
+          <div class="text-center">
+            <h6>Or</h6>
+            <a class="btn btn-sm btn-outline-success" href="{% provider_login_url 'google' %}"><img class="img img-fluid" style="width: 30px;" src="/media/icon_images/search.png" alt=""><span class="ms-1">Log In Using Google</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Sign Up Modal Ends Here -->
