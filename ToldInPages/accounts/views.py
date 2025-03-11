@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from .models import User, Followers
 from booklets.models import Booklet, Category, Page, Rating
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .mailManager import genSecurityCode, sendSecurityCode
 from django.urls import reverse
@@ -358,7 +359,7 @@ def follow(request):
     except Exception as e:
         return HttpResponse([500,e])
     
-
+@login_required(login_url='home')
 def updateProfile(request):
     try:
         if not request.POST.get('first_name'):

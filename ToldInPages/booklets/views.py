@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
-@login_required(login_url='log-in')
+@login_required(login_url='home')
 def allCategories(request):
     if request.user.is_admin:
         categories = Category.objects.all().order_by('-created_at')
@@ -26,7 +26,7 @@ def allCategories(request):
     return HttpResponse('Only admin can manage the category list')
 
 
-@login_required(login_url='log-in')
+@login_required(login_url='home')
 def createCategory(request):
     if request.method == 'POST':
         if request.user.is_admin:
@@ -49,7 +49,7 @@ def createCategory(request):
     return render(request,'front-end/create-category.html',data)        
 
 
-@login_required(login_url='log-in')
+@login_required(login_url='home')
 def showEditCategory(request,category_id):
     category = Category.objects.get(id=category_id)
     suggestions = Booklet.objects.filter(if_published=True).order_by('?')[:5]
@@ -60,7 +60,7 @@ def showEditCategory(request,category_id):
     return render(request,'front-end/edit-category.html',data)
 
 
-@login_required(login_url='log-in')
+@login_required(login_url='home')
 def editCategory(request):
     if request.method == 'POST':
         category_id = request.POST.get('category_id')
@@ -79,7 +79,7 @@ def editCategory(request):
             return redirect('show-edit-category',category.id)
         
 
-@login_required(login_url='log-in')
+@login_required(login_url='home')
 def deleteCategory(request,category_id):
     try:
         category = Category.objects.get(id=category_id)
@@ -157,7 +157,7 @@ def allPages(request,booklet_id,chapter_id):
     return render(request,'front-end/my-pages.html',data)
     return render(request,'all-pages.html',data)
 
-
+@login_required(login_url='home')
 def createBooklet(request):
     if request.method == 'POST':
         try:
@@ -201,7 +201,7 @@ def createBooklet(request):
     }
     return render(request,'front-end/create-booklet.html',data)
 
-
+@login_required(login_url='home')
 def createChapter(request):
     if request.method == 'POST':
         booklet_id = request.POST.get('booklet_id')
@@ -218,7 +218,7 @@ def createChapter(request):
         else:
             return HttpResponse("No booklet found!")
 
-
+@login_required(login_url='home')
 def showCreateChapter(request,booklet_id):
     booklet = Booklet.objects.get(id=booklet_id)
     if booklet.chapter_count()>=10:
@@ -234,7 +234,7 @@ def showCreateChapter(request,booklet_id):
     else:
         return HttpResponse("You are not authorized to add chapters to this booklet")
 
-
+@login_required(login_url='home')
 def showCreatePage(request, chapter_id):
     chapter = Chapter.objects.get(id=chapter_id)
     if not chapter:
@@ -252,7 +252,7 @@ def showCreatePage(request, chapter_id):
     else:
         return HttpResponse("You are not authorized to add chapters to this booklet")
     
-
+@login_required(login_url='home')
 def createPage(request):
     if request.method == 'POST':
         if not request.POST.get('chapter_id'):
@@ -294,7 +294,7 @@ def createPage(request):
             except Exception as e:
                 return JsonResponse([0,e], safe=False)
 
-
+@login_required(login_url='home')
 def showEditBooklet(request,booklet_id):
     booklet = Booklet.objects.get(id=booklet_id, user=request.user)
     if booklet:
@@ -309,7 +309,7 @@ def showEditBooklet(request,booklet_id):
     else:
         return HttpResponse("You are not authorized to edit this booklet!")
     
-
+@login_required(login_url='home')
 def editBooklet(request):
     if request.method == 'POST':
         booklet_id = request.POST.get('booklet_id')
@@ -335,7 +335,7 @@ def editBooklet(request):
             return JsonResponse([200, "Successful"], safe=False)
         return HttpResponse("You are not authorized to edit this booklet.")
     
-
+@login_required(login_url='home')
 def showEditChapter(request,chapter_id):
     chapter = Chapter.objects.get(id=chapter_id)
     if chapter.booklet.user.id==request.user.id:
@@ -348,7 +348,7 @@ def showEditChapter(request,chapter_id):
     else:
         return HttpResponse("You are not authorized to edit this chapter!")
     
-
+@login_required(login_url='home')
 def editChapter(request):
     if request.method == 'POST':
         chapter_id = request.POST.get('chapter_id')
@@ -360,7 +360,7 @@ def editChapter(request):
         else:
             return HttpResponse('You are not authorized to update this chapter!')
         
-
+@login_required(login_url='home')
 def showEditPage(request,page_id):
     page=Page.objects.get(id=page_id)
     if page.booklet.user.id==request.user.id:
@@ -373,7 +373,7 @@ def showEditPage(request,page_id):
     else:
         return HttpResponse('You are not authorized to update this page!')
     
-
+@login_required(login_url='home')
 def editPage(request):
     if request.method == 'POST':
         if not request.POST.get('page_id'):
@@ -411,7 +411,7 @@ def editPage(request):
         else:
             return JsonResponse([0,"You are not authorized to edit the page!"],safe=False)
         
-
+@login_required(login_url='home')
 def deleteBooklet(request,booklet_id):
     booklet = Booklet.objects.get(id=booklet_id,user_id=request.user.id)
     if booklet:
@@ -424,7 +424,7 @@ def deleteBooklet(request,booklet_id):
     else:
         return HttpResponse("You are not authorized to delete this booklet!")
     
-
+@login_required(login_url='home')
 def deleteChapter(request,chapter_id):
     chapter = Chapter.objects.get(id=chapter_id)
     if chapter.booklet.user.id == request.user.id:
@@ -433,7 +433,7 @@ def deleteChapter(request,chapter_id):
     else:
         return HttpResponse("You are not authorized to delete this chapter!")
     
-
+@login_required(login_url='home')
 def deletePage(request,page_id):
     page = Page.objects.get(id=page_id)
     if page.chapter.booklet.user.id == request.user.id:
@@ -528,7 +528,7 @@ def goToChapter(request,booklet_id,chapter_no):
     }
     return render(request,'front-end/reader.html',data)
 
-
+@login_required(login_url='home')
 def publishBooklet(request, booklet_id):
     try:
         booklet = Booklet.objects.get(id=booklet_id)
@@ -541,7 +541,7 @@ def publishBooklet(request, booklet_id):
     except:
         return HttpResponse("Something went wrong!")
 
-
+@login_required(login_url='home')
 def rateBooklet(request):
     try:
         booklet_id = request.GET.get('booklet_id')
